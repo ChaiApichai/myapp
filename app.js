@@ -3,11 +3,19 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://admin:123456789*@cluster0-opzwm.gcp.mongodb.net/sample_geospatial');
+mongoose.Promise = global.Promise
 
 var app = express();
+
+var indexRouter = require('./routes/index_routes');
+var usersRouter = require('./routes/users_routes');
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,8 +27,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
